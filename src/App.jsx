@@ -1,18 +1,19 @@
-import { Routes, Route, Link } from "react-router-dom";
-import Temp from "./views/temp/Temp";
-import Home from "./views/home/Home";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./views/Home";
+import Fractionalize from "./views/Fractionalize";
+import Marketplace from "./views/Marketplace";
+import Portfolio from "./views/Portfolio";
 
 function App() {
     return (
-        <div className="p-4">
-            <nav className="space-x-4">
-                <Link to="/">Home</Link>
-                <Link to="*">Temp</Link>
-            </nav>
-
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+            <Navbar />
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="*" element={<Temp />} />
+                <Route path="/fractionalize" element={<Fractionalize />} />
+                <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/portfolio" element={<Portfolio />} />
             </Routes>
         </div>
     );
