@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useWeb3 } from '../context/Web3Context';
+import { useAccount } from 'wagmi';
+import { useContracts } from '../hooks/useContracts';
+import { useEthersProvider, useEthersSigner } from '../hooks/useEthersProvider';
 import TokenVerifier from '../components/TokenVerifier';
 import { calculateFractionalizationFee, getFixedFeeUSD } from '../utils/priceService';
 import {
@@ -12,7 +14,10 @@ import {
 } from '../utils/contractHelpers';
 
 const Fractionalize = () => {
-  const { account, signer, provider, contracts, isConnected } = useWeb3();
+  const { address: account, isConnected } = useAccount();
+  const { contracts } = useContracts();
+  const provider = useEthersProvider();
+  const signer = useEthersSigner();
   
   const [step, setStep] = useState(0); // 0: Select NFT, 1: Mint NFT, 2: Fractionalize
   const [nftTokenId, setNftTokenId] = useState(null);

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useWeb3 } from '../context/Web3Context';
+import { useAccount } from 'wagmi';
+import { useContracts } from '../hooks/useContracts';
+import { useEthersProvider } from '../hooks/useEthersProvider';
 import {
   getFractionalizationContract,
   getFractionalTokenContract,
@@ -8,28 +10,51 @@ import {
 } from '../utils/contractHelpers';
 
 const Portfolio = () => {
-  const { account, provider, contracts, isConnected } = useWeb3();
+  const { address: account, isConnected } = useAccount();
+  const { contracts } = useContracts();
+  const provider = useEthersProvider();
   
   const [holdings, setHoldings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [totalValue, setTotalValue] = useState(0);
 
   useEffect(() => {
-    if (isConnected && contracts.fractionalization) {
+    if (isConnected && contracts.fractionalization && provider) {
       loadPortfolio();
     }
-  }, [isConnected, contracts.fractionalization, account]);
+  }, [isConnected, contracts.fractionalization, account, provider]);
 
   const loadPortfolio = async () => {
     try {
       setIsLoading(true);
       
+      // Check if provider is ready
+      if (!provider) {
+        console.log('Provider not ready yet');
+        setIsLoading(false);
+        return;
+      }
+
       const fractionalizationContract = getFractionalizationContract(
         contracts.fractionalization,
         provider
       );
       
-      const tokenAddresses = await fractionalizationContract.getAllFractionalizedNFTs();
+      // Try to get fractionalized NFTs, handle empty case
+      let tokenAddresses = [];
+      try {
+        tokenAddresses = await fractionalizationContract.getAllFractionalizedNFTs();
+      } catch (error) {
+        // If we get BAD_DATA error, it likely means no NFTs have been fractionalized yet
+        if (error.code === 'BAD_DATA' || error.message.includes('could not decode result data')) {
+          console.log('No fractionalized NFTs found yet');
+          setHoldings([]);
+          setTotalValue(0);
+          setIsLoading(false);
+          return;
+        }
+        throw error; // Re-throw other errors
+      }
       
       const holdingsData = [];
       let calculatedTotalValue = 0;

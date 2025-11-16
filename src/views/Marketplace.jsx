@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useWeb3 } from '../context/Web3Context';
+import { useAccount } from 'wagmi';
+import { useContracts } from '../hooks/useContracts';
+import { useEthersProvider, useEthersSigner } from '../hooks/useEthersProvider';
 import {
   getMarketplaceContract,
   getFractionalTokenContract,
@@ -12,7 +14,10 @@ import {
 } from '../utils/contractHelpers';
 
 const Marketplace = () => {
-  const { account, signer, provider, contracts, isConnected } = useWeb3();
+  const { address: account, isConnected } = useAccount();
+  const { contracts } = useContracts();
+  const provider = useEthersProvider();
+  const signer = useEthersSigner();
   
   const [activeTab, setActiveTab] = useState('browse'); // 'browse' or 'create'
   const [listings, setListings] = useState([]);
@@ -31,20 +36,36 @@ const Marketplace = () => {
   const [buyAmount, setBuyAmount] = useState('');
 
   useEffect(() => {
-    if (isConnected && contracts.marketplace) {
+    if (isConnected && contracts.marketplace && provider) {
       loadListings();
       loadFractionalizedNFTs();
     }
-  }, [isConnected, contracts.marketplace]);
+  }, [isConnected, contracts.marketplace, provider]);
 
   const loadListings = async () => {
     try {
+      if (!provider) {
+        console.log('Provider not ready yet');
+        return;
+      }
+
       const marketplaceContract = getMarketplaceContract(
         contracts.marketplace,
         provider
       );
       
-      const result = await marketplaceContract.getActiveListings(50);
+      let result;
+      try {
+        result = await marketplaceContract.getActiveListings(50);
+      } catch (error) {
+        if (error.code === 'BAD_DATA' || error.message.includes('could not decode result data')) {
+          console.log('No active listings yet');
+          setListings([]);
+          return;
+        }
+        throw error;
+      }
+      
       const [listingIds, sellers, tokens, amounts, prices] = result;
       
       const listingsData = [];
@@ -80,12 +101,27 @@ const Marketplace = () => {
 
   const loadFractionalizedNFTs = async () => {
     try {
+      if (!provider) {
+        console.log('Provider not ready yet');
+        return;
+      }
+
       const fractionalizationContract = getFractionalizationContract(
         contracts.fractionalization,
         provider
       );
       
-      const tokenAddresses = await fractionalizationContract.getAllFractionalizedNFTs();
+      let tokenAddresses = [];
+      try {
+        tokenAddresses = await fractionalizationContract.getAllFractionalizedNFTs();
+      } catch (error) {
+        if (error.code === 'BAD_DATA' || error.message.includes('could not decode result data')) {
+          console.log('No fractionalized NFTs found yet');
+          setFractionalizedNFTs([]);
+          return;
+        }
+        throw error;
+      }
       
       const nftsData = [];
       for (const tokenAddr of tokenAddresses) {

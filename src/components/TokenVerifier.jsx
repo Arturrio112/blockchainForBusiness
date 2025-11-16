@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
-import { useWeb3 } from '../context/Web3Context';
+import { useAccount } from 'wagmi';
+import { useContracts } from '../hooks/useContracts';
+import { useEthersProvider } from '../hooks/useEthersProvider';
 import { getMockNFTContract, getFractionalTokenContract } from '../utils/contractHelpers';
 
 const TokenVerifier = ({ fractionalTokenAddress, nftAddress, tokenId }) => {
-  const { provider, account, contracts } = useWeb3();
+  const { address: account } = useAccount();
+  const { contracts } = useContracts();
+  const provider = useEthersProvider();
   const [verification, setVerification] = useState({
     nftOwner: null,
     userBalance: null,

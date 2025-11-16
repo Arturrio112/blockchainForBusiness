@@ -1,15 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import { WagmiProvider } from 'wagmi';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import '@rainbow-me/rainbowkit/styles.css';
+
 import App from "./App.jsx";
-import { Web3Provider } from "./context/Web3Context.jsx";
+import { config } from './config/wagmi';
+
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
-        <BrowserRouter>
-            <Web3Provider>
-                <App />
-            </Web3Provider>
-        </BrowserRouter>
+        <WagmiProvider config={config}>
+            <QueryClientProvider client={queryClient}>
+                <RainbowKitProvider>
+                    <BrowserRouter>
+                        <App />
+                    </BrowserRouter>
+                </RainbowKitProvider>
+            </QueryClientProvider>
+        </WagmiProvider>
     </React.StrictMode>
 );
