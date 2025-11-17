@@ -1,9 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Home from "./views/Home";
-import Fractionalize from "./views/Fractionalize";
-import Marketplace from "./views/Marketplace";
-import Portfolio from "./views/Portfolio";
+import Home from "./views/home/Home";
+import Fractionalize from "./views/fractionalize/Fractionalize";
+import Marketplace from "./views/marketplace/Marketplace";
+import Portfolio from "./views/portfolio/Portfolio";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
     return (
@@ -11,9 +12,31 @@ function App() {
             <Navbar />
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/fractionalize" element={<Fractionalize />} />
-                <Route path="/marketplace" element={<Marketplace />} />
-                <Route path="/portfolio" element={<Portfolio />} />
+
+                <Route
+                    path="/fractionalize"
+                    element={
+                        <ProtectedRoute>
+                            <Fractionalize />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/marketplace"
+                    element={
+                        <ProtectedRoute>
+                            <Marketplace />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/portfolio"
+                    element={
+                        <ProtectedRoute>
+                            <Portfolio />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </div>
     );
