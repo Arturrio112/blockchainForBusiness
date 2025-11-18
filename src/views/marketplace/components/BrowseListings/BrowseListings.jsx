@@ -1,9 +1,15 @@
-import { useState } from "react";
 import { formatEther, shortenAddress } from "../../../../utils/contractHelpers";
-const BrowseListings = ({ listings, account, handleBuyTokens, isLoading }) => {
-    const [buyingListingId, setBuyingListingId] = useState(null);
-    const [buyAmount, setBuyAmount] = useState("");
 
+const BrowseListings = ({
+    listings,
+    account,
+    buyingListingId,
+    buyAmount,
+    setBuyAmount,
+    setBuyingListingId,
+    handleBuyTokens,
+    isLoading,
+}) => {
     return (
         <div>
             {listings.length === 0 ? (
@@ -22,6 +28,7 @@ const BrowseListings = ({ listings, account, handleBuyTokens, isLoading }) => {
                             key={listing.id}
                             className="bg-gradient-to-br from-purple-900/50 to-indigo-900/50 backdrop-blur-sm border-2 border-cyan-500 rounded-2xl p-6 shadow-xl hover:shadow-cyan-500/30 transition-all duration-300"
                         >
+                            {/* Header */}
                             <div className="mb-4">
                                 <h3 className="text-xl font-black text-cyan-400 mb-2">
                                     {listing.tokenName}
@@ -37,6 +44,7 @@ const BrowseListings = ({ listings, account, handleBuyTokens, isLoading }) => {
                                 </p>
                             </div>
 
+                            {/* Details */}
                             <div className="space-y-2 mb-4">
                                 <div className="flex justify-between">
                                     <span className="text-gray-400 text-sm">
@@ -54,16 +62,9 @@ const BrowseListings = ({ listings, account, handleBuyTokens, isLoading }) => {
                                         {formatEther(listing.pricePerToken)} ETH
                                     </span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-gray-400 text-sm">
-                                        Total value:
-                                    </span>
-                                    <span className="text-purple-400 font-bold">
-                                        {formatEther(listing.totalPrice)} ETH
-                                    </span>
-                                </div>
                             </div>
 
+                            {/* Buy UI */}
                             {buyingListingId === listing.id ? (
                                 <div className="space-y-3">
                                     <input
@@ -112,7 +113,7 @@ const BrowseListings = ({ listings, account, handleBuyTokens, isLoading }) => {
                                         listing.seller.toLowerCase() ===
                                         account.toLowerCase()
                                     }
-                                    className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-black font-black text-sm transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed border-2 border-green-300"
+                                    className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-black font-black text-sm transition-all shadow-lg disabled:opacity-50"
                                 >
                                     {listing.seller.toLowerCase() ===
                                     account.toLowerCase()

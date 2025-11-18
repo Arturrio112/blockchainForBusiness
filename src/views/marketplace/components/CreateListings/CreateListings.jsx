@@ -1,8 +1,5 @@
-import { useState } from "react";
-
-const CreateListing = ({
+const CreateListings = ({
     fractionalizedNFTs,
-    account,
     selectedToken,
     setSelectedToken,
     listingAmount,
@@ -20,6 +17,7 @@ const CreateListing = ({
                 </h2>
 
                 <div className="space-y-4">
+                    {/* Token Select */}
                     <div>
                         <label className="block text-sm font-bold text-cyan-400 mb-2 uppercase">
                             Select Fractional Token
@@ -37,20 +35,14 @@ const CreateListing = ({
                                         key={nft.address}
                                         value={nft.address}
                                     >
-                                        {nft.name} ({nft.symbol}) - Balance:{" "}
+                                        {nft.name} ({nft.symbol}) — Balance:{" "}
                                         {nft.balance}
                                     </option>
                                 ))}
                         </select>
-                        {fractionalizedNFTs.filter(
-                            (nft) => Number(nft.balance) > 0
-                        ).length === 0 && (
-                            <p className="text-xs text-gray-400 mt-1">
-                                You don't own any fractional tokens yet
-                            </p>
-                        )}
                     </div>
 
+                    {/* Amount */}
                     <div>
                         <label className="block text-sm font-bold text-cyan-400 mb-2 uppercase">
                             Amount to Sell
@@ -60,10 +52,11 @@ const CreateListing = ({
                             value={listingAmount}
                             onChange={(e) => setListingAmount(e.target.value)}
                             placeholder="e.g., 1000"
-                            className="w-full px-4 py-3 bg-slate-800/50 border-2 border-purple-500 rounded-lg text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none"
+                            className="w-full px-4 py-3 bg-slate-800/50 border-2 border-purple-500 rounded-lg text-white focus:border-cyan-500 focus:outline-none"
                         />
                     </div>
 
+                    {/* Price */}
                     <div>
                         <label className="block text-sm font-bold text-cyan-400 mb-2 uppercase">
                             Price per Token (ETH)
@@ -73,13 +66,14 @@ const CreateListing = ({
                             value={pricePerToken}
                             onChange={(e) => setPricePerToken(e.target.value)}
                             placeholder="e.g., 0.001"
-                            className="w-full px-4 py-3 bg-slate-800/50 border-2 border-purple-500 rounded-lg text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none"
+                            className="w-full px-4 py-3 bg-slate-800/50 border-2 border-purple-500 rounded-lg text-white focus:border-cyan-500 focus:outline-none"
                         />
                     </div>
 
+                    {/* Summary */}
                     {listingAmount && pricePerToken && (
                         <div className="p-4 bg-purple-900/30 border-2 border-purple-500 rounded-lg">
-                            <div className="flex justify-between items-center mb-2">
+                            <div className="flex justify-between mb-2">
                                 <span className="text-gray-300">
                                     Total Value:
                                 </span>
@@ -91,22 +85,10 @@ const CreateListing = ({
                                     ETH
                                 </span>
                             </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-gray-300 text-sm">
-                                    Trading Fee (0.5%):
-                                </span>
-                                <span className="text-gray-400 text-sm">
-                                    {(
-                                        Number(listingAmount) *
-                                        Number(pricePerToken) *
-                                        0.005
-                                    ).toFixed(6)}{" "}
-                                    ETH
-                                </span>
-                            </div>
                         </div>
                     )}
 
+                    {/* Button */}
                     <button
                         onClick={handleCreateListing}
                         disabled={
@@ -115,7 +97,7 @@ const CreateListing = ({
                             !listingAmount ||
                             !pricePerToken
                         }
-                        className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-lg transition-all duration-200 shadow-xl shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-cyan-300"
+                        className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-lg transition-all duration-200 shadow-xl disabled:opacity-50"
                     >
                         {isLoading ? "CREATING..." : "CREATE LISTING"}
                     </button>
@@ -125,4 +107,4 @@ const CreateListing = ({
     );
 };
 
-export default CreateListing;
+export default CreateListings;
