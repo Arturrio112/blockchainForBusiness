@@ -190,18 +190,19 @@ const Portfolio = () => {
                             or fractionalizing your own NFTs
                         </p>
                         <div className="flex justify-center space-x-4">
-                            <a
-                                href="/marketplace"
+                            <button
+                                onClick={() => navigate("/marketplace")}
                                 className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-sm transition-all duration-200 shadow-xl shadow-cyan-500/50 border-2 border-cyan-300"
                             >
                                 BROWSE MARKETPLACE
-                            </a>
-                            <a
-                                href="/fractionalize"
+                            </button>
+
+                            <button
+                                onClick={() => navigate("/fractionalize")}
                                 className="px-6 py-3 rounded-xl bg-purple-900 hover:bg-purple-800 text-cyan-400 font-black text-sm transition-all duration-200 border-2 border-cyan-400"
                             >
                                 FRACTIONALIZE NFT
-                            </a>
+                            </button>
                         </div>
                     </div>
                 ) : (
