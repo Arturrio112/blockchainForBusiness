@@ -8,6 +8,7 @@ const BrowseListings = ({
     setBuyAmount,
     setBuyingListingId,
     handleBuyTokens,
+    handleCancelListing,
     isLoading,
 }) => {
     return (
@@ -83,7 +84,7 @@ const BrowseListings = ({
                                                 setBuyingListingId(null);
                                                 setBuyAmount("");
                                             }}
-                                            className="flex-1 px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white font-bold text-sm transition-all"
+                                            className="cursor-pointer flex-1 px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white font-bold text-sm transition-all"
                                         >
                                             CANCEL
                                         </button>
@@ -96,7 +97,7 @@ const BrowseListings = ({
                                                 )
                                             }
                                             disabled={isLoading || !buyAmount}
-                                            className="flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-black font-bold text-sm transition-all shadow-lg disabled:opacity-50"
+                                            className="cursor-pointer flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-black font-bold text-sm transition-all shadow-lg disabled:opacity-50"
                                         >
                                             {isLoading
                                                 ? "BUYING..."
@@ -105,21 +106,39 @@ const BrowseListings = ({
                                     </div>
                                 </div>
                             ) : (
-                                <button
-                                    onClick={() =>
-                                        setBuyingListingId(listing.id)
-                                    }
-                                    disabled={
-                                        listing.seller.toLowerCase() ===
+                                <>
+                                    <button
+                                        onClick={() =>
+                                            setBuyingListingId(listing.id)
+                                        }
+                                        disabled={
+                                            listing.seller.toLowerCase() ===
+                                            account.toLowerCase()
+                                        }
+                                        className="cursor-pointer w-full mb-2 px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-black font-black text-sm transition-all shadow-lg disabled:opacity-50"
+                                    >
+                                        {listing.seller.toLowerCase() ===
                                         account.toLowerCase()
-                                    }
-                                    className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-black font-black text-sm transition-all shadow-lg disabled:opacity-50"
-                                >
+                                            ? "YOUR LISTING"
+                                            : "BUY TOKENS"}
+                                    </button>
+
+                                    {/* Cancel Listing button - only visible for owner */}
                                     {listing.seller.toLowerCase() ===
-                                    account.toLowerCase()
-                                        ? "YOUR LISTING"
-                                        : "BUY TOKENS"}
-                                </button>
+                                        account.toLowerCase() && (
+                                        <button
+                                            onClick={() =>
+                                                handleCancelListing(listing.id)
+                                            }
+                                            disabled={isLoading}
+                                            className="cursor-pointer w-full px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition-all shadow-lg disabled:opacity-50"
+                                        >
+                                            {isLoading
+                                                ? "CANCELLING..."
+                                                : "CANCEL LISTING"}
+                                        </button>
+                                    )}
+                                </>
                             )}
                         </div>
                     ))}

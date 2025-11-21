@@ -432,7 +432,7 @@ const Fractionalize = () => {
 
                         <button
                             onClick={() => setStep(1)}
-                            className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-black text-lg transition-all duration-200 shadow-xl border-2 border-purple-400"
+                            className="cursor-pointer w-full px-6 py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-black text-lg transition-all duration-200 shadow-xl border-2 border-purple-400"
                         >
                             OR MINT NEW NFT
                         </button>
@@ -471,7 +471,7 @@ const Fractionalize = () => {
                             <button
                                 onClick={handleMintNFT}
                                 disabled={isLoading || !nftUri.trim()}
-                                className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-lg transition-all duration-200 shadow-xl shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-cyan-300"
+                                className="cursor-pointer w-full px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-lg transition-all duration-200 shadow-xl shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-cyan-300"
                             >
                                 {isLoading ? "MINTING..." : "MINT NFT"}
                             </button>
@@ -503,7 +503,7 @@ const Fractionalize = () => {
                                                 );
                                             }
                                         }}
-                                        className="px-6 py-2 rounded-lg bg-purple-900 hover:bg-purple-800 text-cyan-400 font-bold text-sm transition-all border-2 border-cyan-400"
+                                        className="cursor-pointer px-6 py-2 rounded-lg bg-purple-900 hover:bg-purple-800 text-cyan-400 font-bold text-sm transition-all border-2 border-cyan-400"
                                     >
                                         SKIP TO FRACTIONALIZE
                                     </button>
@@ -623,7 +623,7 @@ const Fractionalize = () => {
                             <div className="flex space-x-4">
                                 <button
                                     onClick={() => setStep(1)}
-                                    className="flex-1 px-6 py-4 rounded-xl bg-gray-700 hover:bg-gray-600 text-white font-black text-lg transition-all duration-200 border-2 border-gray-500"
+                                    className="cursor-pointer flex-1 px-6 py-4 rounded-xl bg-gray-700 hover:bg-gray-600 text-white font-black text-lg transition-all duration-200 border-2 border-gray-500"
                                 >
                                     BACK
                                 </button>
@@ -635,7 +635,7 @@ const Fractionalize = () => {
                                         !fractionalSymbol.trim() ||
                                         !totalSupply
                                     }
-                                    className="flex-1 px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-lg transition-all duration-200 shadow-xl shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-cyan-300"
+                                    className="cursor-pointer flex-1 px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-lg transition-all duration-200 shadow-xl shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-cyan-300"
                                 >
                                     {isLoading
                                         ? "PROCESSING..."

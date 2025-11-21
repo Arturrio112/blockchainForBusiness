@@ -1,21 +1,28 @@
 import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import { useContracts } from "../../hooks/useContracts";
-import { useEthersProvider } from "../../hooks/useEthersProvider";
+import {
+    useEthersProvider,
+    useEthersSigner,
+} from "../../hooks/useEthersProvider";
 import {
     getFractionalizationContract,
     getFractionalTokenContract,
     handleContractError,
     shortenAddress,
+    redeemNft,
 } from "../../utils/contractHelpers";
 import { useNavigate } from "react-router-dom";
 const Portfolio = () => {
     const { address: account, isConnected } = useAccount();
     const { contracts } = useContracts();
     const provider = useEthersProvider();
+    const signer = useEthersSigner();
     const navigate = useNavigate();
     const [holdings, setHoldings] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     const [totalValue, setTotalValue] = useState(0);
 
     useEffect(() => {
@@ -27,7 +34,8 @@ const Portfolio = () => {
     const loadPortfolio = async () => {
         try {
             setIsLoading(true);
-
+            setError("");
+            setSuccess("");
             // Check if provider is ready
             if (!provider) {
                 console.log("Provider not ready yet");
@@ -108,6 +116,56 @@ const Portfolio = () => {
         } catch (err) {
             console.error("Error loading portfolio:", err);
         } finally {
+            setIsLoading(false);
+        }
+    };
+    const redeemNFT = async (tokenAddress) => {
+        try {
+            setError("");
+            setSuccess("");
+            setIsLoading(true);
+
+            if (!signer || !contracts.fractionalization) {
+                setError("Wallet not ready");
+                setSuccess("");
+                return;
+            }
+
+            const fractionalizationContract = getFractionalizationContract(
+                contracts.fractionalization,
+                signer
+            );
+
+            const tokenContract = getFractionalTokenContract(
+                tokenAddress,
+                signer
+            );
+
+            // 1. Approve tokens
+            setSuccess("Step 1/2: Approving tokens...");
+            const totalSupply = await tokenContract.totalSupply();
+            const approveTx = await tokenContract.approve(
+                contracts.fractionalization,
+                totalSupply
+            );
+            await approveTx.wait();
+
+            // 2. Redeem NFT
+            setSuccess("Step 2/2: Redeeming NFT...");
+            const tx = await fractionalizationContract.redeemNFT(tokenAddress);
+            await tx.wait();
+
+            // Successful
+            setSuccess("NFT successfully redeemed!");
+
+            // 🔥 Delay portfolio refresh (same as Marketplace)
+            setTimeout(() => {
+                loadPortfolio();
+                setIsLoading(false);
+            }, 2000);
+        } catch (err) {
+            setError(handleContractError(err));
+            setSuccess("");
             setIsLoading(false);
         }
     };
@@ -192,14 +250,14 @@ const Portfolio = () => {
                         <div className="flex justify-center space-x-4">
                             <button
                                 onClick={() => navigate("/marketplace")}
-                                className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-sm transition-all duration-200 shadow-xl shadow-cyan-500/50 border-2 border-cyan-300"
+                                className="cursor-pointer px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-sm transition-all duration-200 shadow-xl shadow-cyan-500/50 border-2 border-cyan-300"
                             >
                                 BROWSE MARKETPLACE
                             </button>
 
                             <button
                                 onClick={() => navigate("/fractionalize")}
-                                className="px-6 py-3 rounded-xl bg-purple-900 hover:bg-purple-800 text-cyan-400 font-black text-sm transition-all duration-200 border-2 border-cyan-400"
+                                className="cursor-pointer px-6 py-3 rounded-xl bg-purple-900 hover:bg-purple-800 text-cyan-400 font-black text-sm transition-all duration-200 border-2 border-cyan-400"
                             >
                                 FRACTIONALIZE NFT
                             </button>
@@ -296,14 +354,19 @@ const Portfolio = () => {
                                 <div className="mt-4 flex space-x-3">
                                     <button
                                         onClick={() => navigate("/marketplace")}
-                                        className="px-4 py-2 rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-bold text-sm transition-all shadow-lg border-2 border-green-400"
+                                        className="cursor-pointer px-4 py-2 rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-bold text-sm transition-all shadow-lg border-2 border-green-400"
                                     >
                                         SELL TOKENS
                                     </button>
                                     {Number(holding.ownershipPercentage) ===
                                         100 &&
                                         holding.isActive && (
-                                            <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-sm transition-all shadow-lg border-2 border-purple-400">
+                                            <button
+                                                onClick={() =>
+                                                    redeemNFT(holding.address)
+                                                }
+                                                className="cursor-pointer px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-sm transition-all shadow-lg border-2 border-purple-400"
+                                            >
                                                 REDEEM NFT
                                             </button>
                                         )}
@@ -319,10 +382,23 @@ const Portfolio = () => {
                         <button
                             onClick={loadPortfolio}
                             disabled={isLoading}
-                            className="px-8 py-3 rounded-xl bg-purple-900 hover:bg-purple-800 text-cyan-400 font-black text-sm transition-all duration-200 border-2 border-cyan-400 disabled:opacity-50"
+                            className="cursor-pointer px-8 py-3 rounded-xl bg-purple-900 hover:bg-purple-800 text-cyan-400 font-black text-sm transition-all duration-200 border-2 border-cyan-400 disabled:opacity-50"
                         >
                             {isLoading ? "REFRESHING..." : "REFRESH PORTFOLIO"}
                         </button>
+                    </div>
+                )}
+                {error && (
+                    <div className="mt-6 p-4 bg-red-900/50 border-2 border-red-500 rounded-lg">
+                        <p className="text-red-300 font-semibold">{error}</p>
+                    </div>
+                )}
+
+                {success && (
+                    <div className="mt-6 p-4 bg-green-900/50 border-2 border-green-500 rounded-lg">
+                        <p className="text-green-300 font-semibold">
+                            {success}
+                        </p>
                     </div>
                 )}
             </div>

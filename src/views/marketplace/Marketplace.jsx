@@ -10,10 +10,9 @@ import {
     getFractionalTokenContract,
     getFractionalizationContract,
     parseEther,
-    formatEther,
+    cancelListing,
     handleContractError,
     waitForTransaction,
-    shortenAddress,
 } from "../../utils/contractHelpers";
 import CreateListings from "./components/CreateListings/CreateListings";
 import BrowseListings from "./components/BrowseListings/BrowseListings";
@@ -274,6 +273,35 @@ const Marketplace = () => {
             setIsLoading(false);
         }
     };
+    const handleCancelListing = async (listingId) => {
+        try {
+            setError("");
+            setSuccess("");
+            setIsLoading(true);
+
+            if (!signer || !contracts.marketplace) {
+                setError("Wallet not ready");
+                return;
+            }
+
+            setSuccess("Cancelling listing...");
+
+            await cancelListing(
+                contracts.marketplace, // address
+                listingId, // listing ID
+                signer
+            );
+
+            setSuccess("Listing cancelled!");
+
+            // Optional: reload listings after slight delay
+            setTimeout(() => loadListings(), 500);
+        } catch (err) {
+            setError(err.message || "Failed to cancel listing");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     if (!isConnected) {
         return (
@@ -307,7 +335,7 @@ const Marketplace = () => {
                 <div className="flex justify-center space-x-4 mb-8">
                     <button
                         onClick={() => setActiveTab("browse")}
-                        className={`px-8 py-3 rounded-xl font-black text-lg transition-all duration-200 ${
+                        className={`cursor-pointer px-8 py-3 rounded-xl font-black text-lg transition-all duration-200 ${
                             activeTab === "browse"
                                 ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-black shadow-xl shadow-cyan-500/50 border-2 border-cyan-300"
                                 : "bg-purple-900/50 text-cyan-400 border-2 border-purple-500 hover:bg-purple-800/50"
@@ -317,7 +345,7 @@ const Marketplace = () => {
                     </button>
                     <button
                         onClick={() => setActiveTab("create")}
-                        className={`px-8 py-3 rounded-xl font-black text-lg transition-all duration-200 ${
+                        className={`cursor-pointer px-8 py-3 rounded-xl font-black text-lg transition-all duration-200 ${
                             activeTab === "create"
                                 ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-black shadow-xl shadow-cyan-500/50 border-2 border-cyan-300"
                                 : "bg-purple-900/50 text-cyan-400 border-2 border-purple-500 hover:bg-purple-800/50"
@@ -337,6 +365,7 @@ const Marketplace = () => {
                         setBuyAmount={setBuyAmount}
                         setBuyingListingId={setBuyingListingId}
                         handleBuyTokens={handleBuyTokens}
+                        handleCancelListing={handleCancelListing}
                         isLoading={isLoading}
                     />
                 )}

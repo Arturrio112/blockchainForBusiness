@@ -53,7 +53,7 @@ const Home = () => {
                                                     openAccountModal();
                                                 }
                                             }}
-                                            className="px-10 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-lg transition-all duration-200 shadow-2xl shadow-cyan-500/50 hover:shadow-cyan-400/70 border-2 border-cyan-300 cursor-pointer"
+                                            className="cursor-pointer px-10 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-lg transition-all duration-200 shadow-2xl shadow-cyan-500/50 hover:shadow-cyan-400/70 border-2 border-cyan-300 cursor-pointer"
                                         >
                                             {account
                                                 ? "Wallet Connected"

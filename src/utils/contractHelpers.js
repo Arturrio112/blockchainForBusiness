@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-
+import { useEthersSigner } from '../hooks/useEthersProvider';
 // Import compiled ABIs from Hardhat artifacts
 import NFTFractionalizationArtifact from '../../artifacts/contracts/NFTFractionalization.sol/NFTFractionalization.json';
 import FractionalMarketplaceArtifact from '../../artifacts/contracts/FractionalMarketplace.sol/FractionalMarketplace.json';
@@ -93,5 +93,49 @@ export const handleContractError = (error) => {
   }
   
   return 'An error occurred. Please try again.';
+};
+
+export const redeemNft = async (
+  fractionalizationContract,
+  fractionalTokenAddress,
+  signer
+) => {
+  try {
+    const token = getFractionalTokenContract(fractionalTokenAddress, signer);
+
+    const totalSupply = await token.totalSupply();
+
+    const approveTx = await token.approve(
+      fractionalizationContract.target,
+      totalSupply
+    );
+    await approveTx.wait();
+
+    const tx = await fractionalizationContract.redeemNFT(
+      fractionalTokenAddress
+    );
+
+    const receipt = await tx.wait();
+    return receipt;
+
+  } catch (error) {
+    throw new Error(handleContractError(error));
+  }
+};
+export const cancelListing = async (
+  marketplaceAddress,
+  listingId,
+  signer
+) => {
+  try {
+    const marketplace = getMarketplaceContract(marketplaceAddress, signer);
+
+    const tx = await marketplace.cancelListing(listingId);
+    const receipt = await tx.wait();
+
+    return receipt;
+  } catch (error) {
+    throw new Error(handleContractError(error));
+  }
 };
 

@@ -97,7 +97,7 @@ const CreateListings = ({
                             !listingAmount ||
                             !pricePerToken
                         }
-                        className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-lg transition-all duration-200 shadow-xl disabled:opacity-50"
+                        className="cursor-pointer w-full px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-lg transition-all duration-200 shadow-xl disabled:opacity-50"
                     >
                         {isLoading ? "CREATING..." : "CREATE LISTING"}
                     </button>
