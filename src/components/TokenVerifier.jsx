@@ -5,6 +5,7 @@ import { useEthersProvider } from "../hooks/useEthersProvider";
 import {
     getMockNFTContract,
     getFractionalTokenContract,
+    formatEther,
 } from "../utils/contractHelpers";
 
 const TokenVerifier = ({ fractionalTokenAddress, nftAddress, tokenId }) => {
@@ -39,8 +40,8 @@ const TokenVerifier = ({ fractionalTokenAddress, nftAddress, tokenId }) => {
                 fractionalTokenAddress,
                 provider
             );
-            const userBalance = await tokenContract.balanceOf(account);
-            const totalSupply = await tokenContract.totalSupply();
+            const userBalance = formatEther(await tokenContract.balanceOf(account));
+            const totalSupply = formatEther(await tokenContract.totalSupply());
             const tokenSymbol = await tokenContract.symbol();
             const tokenName = await tokenContract.name();
 

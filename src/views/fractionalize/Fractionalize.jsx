@@ -81,6 +81,16 @@ const Fractionalize = () => {
         }
     };
 
+    const resetTransactionState = () => {
+        setError("");
+        setSuccess("");
+        setTxHash("");
+        setFractionalTokenAddress("");
+        setFractionalName("");
+        setFractionalSymbol("");
+        setTotalSupply("");
+    };
+
     // Fetch current ETH price and calculate fee when user reaches step 2
     useEffect(() => {
         if (step === 2) {
@@ -233,7 +243,7 @@ const Fractionalize = () => {
                 nftTokenId,
                 fractionalName,
                 fractionalSymbol,
-                totalSupply,
+                parseEther(totalSupply),
                 { value: feeInWei }
             );
             setTxHash(tx.hash);
@@ -622,7 +632,7 @@ const Fractionalize = () => {
 
                             <div className="flex space-x-4">
                                 <button
-                                    onClick={() => setStep(1)}
+                                    onClick={() => [resetTransactionState(), setStep(1)]}
                                     className="cursor-pointer flex-1 px-6 py-4 rounded-xl bg-gray-700 hover:bg-gray-600 text-white font-black text-lg transition-all duration-200 border-2 border-gray-500"
                                 >
                                     BACK
