@@ -13,6 +13,7 @@ import {
     cancelListing,
     handleContractError,
     waitForTransaction,
+    formatEther,
 } from "../../utils/contractHelpers";
 import CreateListings from "./components/CreateListings/CreateListings";
 import BrowseListings from "./components/BrowseListings/BrowseListings";
@@ -97,7 +98,7 @@ const Marketplace = () => {
                     token: tokens[i],
                     tokenName,
                     tokenSymbol,
-                    amount: amounts[i].toString(),
+                    amount: formatEther(amounts[i].toString()),
                     pricePerToken: prices[i].toString(),
                     totalPrice: (
                         BigInt(amounts[i]) * BigInt(prices[i])
@@ -154,14 +155,16 @@ const Marketplace = () => {
                     const name = await tokenContract.name();
                     const symbol = await tokenContract.symbol();
                     const balance = account
-                        ? await tokenContract.balanceOf(account)
+                        ? formatEther(await tokenContract.balanceOf(account))
                         : 0;
 
                     nftsData.push({
                         address: tokenAddr,
                         name,
                         symbol,
-                        totalSupply: nftInfo.totalSupply.toString(),
+                        totalSupply: formatEther(
+                            nftInfo.totalSupply.toString()
+                        ),
                         isActive: nftInfo.isActive,
                         balance: balance.toString(),
                     });
@@ -200,7 +203,7 @@ const Marketplace = () => {
             setSuccess("Step 1/2: Approving tokens...");
             const approveTx = await tokenContract.approve(
                 contracts.marketplace,
-                listingAmount
+                parseEther(listingAmount)
             );
             await waitForTransaction(approveTx);
 
@@ -209,7 +212,7 @@ const Marketplace = () => {
             const priceInWei = parseEther(pricePerToken);
             const tx = await marketplaceContract.createListing(
                 selectedToken,
-                listingAmount,
+                parseEther(listingAmount),
                 priceInWei
             );
             await waitForTransaction(tx);

@@ -11,6 +11,7 @@ import {
     handleContractError,
     shortenAddress,
     redeemNft,
+    formatEther,
 } from "../../utils/contractHelpers";
 import { useNavigate } from "react-router-dom";
 const Portfolio = () => {
@@ -77,12 +78,16 @@ const Portfolio = () => {
                         tokenAddr,
                         provider
                     );
-                    const balance = await tokenContract.balanceOf(account);
+                    const balance = formatEther(
+                        await tokenContract.balanceOf(account)
+                    );
 
                     if (balance > 0) {
                         const name = await tokenContract.name();
                         const symbol = await tokenContract.symbol();
-                        const totalSupply = await tokenContract.totalSupply();
+                        const totalSupply = formatEther(
+                            await tokenContract.totalSupply()
+                        );
                         const nftInfo =
                             await fractionalizationContract.getFractionalizedNFT(
                                 tokenAddr
