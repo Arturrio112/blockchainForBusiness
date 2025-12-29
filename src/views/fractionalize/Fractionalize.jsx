@@ -290,8 +290,8 @@ const Fractionalize = () => {
 
     if (!isConnected) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-                <div className="bg-gradient-to-br from-purple-900/50 to-indigo-900/50 backdrop-blur-sm border-2 border-cyan-500 rounded-2xl p-12 text-center max-w-md shadow-2xl">
+            <div className="min-h-screen bg-gradient-to-br from-slate-900 via-orange-900 to-slate-900 flex items-center justify-center p-4">
+                <div className="bg-gradient-to-br from-orange-900/50 to-indigo-900/50 backdrop-blur-sm border-2 border-cyan-500 rounded-2xl p-12 text-center max-w-md shadow-2xl">
                     <h2 className="text-3xl font-black text-cyan-400 mb-4">
                         WALLET NOT CONNECTED
                     </h2>
@@ -304,11 +304,11 @@ const Fractionalize = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-orange-900 to-slate-900 p-8">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-4">
+                    <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-orange-500 mb-4">
                         FRACTIONALIZE YOUR NFT
                     </h1>
                     <p className="text-gray-300 text-lg">
@@ -390,7 +390,7 @@ const Fractionalize = () => {
 
                 {/* Step 0: Select or Mint NFT */}
                 {step === 0 && (
-                    <div className="bg-gradient-to-br from-purple-900/50 to-indigo-900/50 backdrop-blur-sm border-2 border-cyan-500 rounded-2xl p-8 shadow-2xl">
+                    <div className="bg-gradient-to-br from-orange-900/50 to-indigo-900/50 backdrop-blur-sm border-2 border-cyan-500 rounded-2xl p-8 shadow-2xl">
                         <h2 className="text-2xl font-black text-cyan-400 mb-6">
                             STEP 1: SELECT YOUR NFT
                         </h2>
@@ -416,7 +416,7 @@ const Fractionalize = () => {
                                                 );
                                                 setStep(2);
                                             }}
-                                            className="p-4 bg-slate-800/50 border-2 border-purple-500 hover:border-cyan-500 rounded-lg cursor-pointer transition-all hover:shadow-lg hover:shadow-cyan-500/30"
+                                            className="p-4 bg-slate-800/50 border-2 border-orange-500 hover:border-cyan-500 rounded-lg cursor-pointer transition-all hover:shadow-lg hover:shadow-cyan-500/30"
                                         >
                                             <div className="flex items-center space-x-4">
                                                 <div className="flex-1">
@@ -442,7 +442,7 @@ const Fractionalize = () => {
 
                         <button
                             onClick={() => setStep(1)}
-                            className="cursor-pointer w-full px-6 py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-black text-lg transition-all duration-200 shadow-xl border-2 border-purple-400"
+                            className="cursor-pointer w-full px-6 py-4 rounded-xl bg-gradient-to-r from-orange-600 to-pink-600 hover:from-orange-500 hover:to-pink-500 text-white font-black text-lg transition-all duration-200 shadow-xl border-2 border-orange-400"
                         >
                             OR MINT NEW NFT
                         </button>
@@ -451,7 +451,7 @@ const Fractionalize = () => {
 
                 {/* Step 1: Mint NFT */}
                 {step === 1 && (
-                    <div className="bg-gradient-to-br from-purple-900/50 to-indigo-900/50 backdrop-blur-sm border-2 border-cyan-500 rounded-2xl p-8 shadow-2xl">
+                    <div className="bg-gradient-to-br from-orange-900/50 to-indigo-900/50 backdrop-blur-sm border-2 border-cyan-500 rounded-2xl p-8 shadow-2xl">
                         <h2 className="text-2xl font-black text-cyan-400 mb-6">
                             STEP 1: MINT A TEST NFT
                         </h2>
@@ -470,7 +470,7 @@ const Fractionalize = () => {
                                     value={nftUri}
                                     onChange={(e) => setNftUri(e.target.value)}
                                     placeholder="ipfs://... or https://..."
-                                    className="w-full px-4 py-3 bg-slate-800/50 border-2 border-purple-500 rounded-lg text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none"
+                                    className="w-full px-4 py-3 bg-slate-800/50 border-2 border-orange-500 rounded-lg text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none"
                                 />
                                 <p className="text-xs text-gray-400 mt-1">
                                     Enter any URI or text for testing (e.g., "My
@@ -481,7 +481,7 @@ const Fractionalize = () => {
                             <button
                                 onClick={handleMintNFT}
                                 disabled={isLoading || !nftUri.trim()}
-                                className="cursor-pointer w-full px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-lg transition-all duration-200 shadow-xl shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-cyan-300"
+                                className="cursor-pointer w-full px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-orange-500 hover:from-cyan-400 hover:to-orange-400 text-black font-black text-lg transition-all duration-200 shadow-xl shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-cyan-300"
                             >
                                 {isLoading ? "MINTING..." : "MINT NFT"}
                             </button>
@@ -513,7 +513,7 @@ const Fractionalize = () => {
                                                 );
                                             }
                                         }}
-                                        className="cursor-pointer px-6 py-2 rounded-lg bg-purple-900 hover:bg-purple-800 text-cyan-400 font-bold text-sm transition-all border-2 border-cyan-400"
+                                        className="cursor-pointer px-6 py-2 rounded-lg bg-orange-900 hover:bg-orange-800 text-cyan-400 font-bold text-sm transition-all border-2 border-cyan-400"
                                     >
                                         SKIP TO FRACTIONALIZE
                                     </button>
@@ -525,13 +525,13 @@ const Fractionalize = () => {
 
                 {/* Step 2: Fractionalize */}
                 {step === 2 && (
-                    <div className="bg-gradient-to-br from-purple-900/50 to-indigo-900/50 backdrop-blur-sm border-2 border-cyan-500 rounded-2xl p-8 shadow-2xl">
+                    <div className="bg-gradient-to-br from-orange-900/50 to-indigo-900/50 backdrop-blur-sm border-2 border-cyan-500 rounded-2xl p-8 shadow-2xl">
                         <h2 className="text-2xl font-black text-cyan-400 mb-6">
                             STEP 2: FRACTIONALIZE NFT
                         </h2>
 
-                        <div className="mb-6 p-4 bg-green-900/30 border-2 border-green-500 rounded-lg">
-                            <p className="text-green-300 font-semibold">
+                        <div className="mb-6 p-4 bg-orange-900/30 border-2 border-orange-500 rounded-lg">
+                            <p className="text-orange-300 font-semibold">
                                 NFT Token ID:{" "}
                                 <span className="text-cyan-400">
                                     #{nftTokenId}
@@ -551,7 +551,7 @@ const Fractionalize = () => {
                                         setFractionalName(e.target.value)
                                     }
                                     placeholder="e.g., Fractionalized CryptoPunk #1234"
-                                    className="w-full px-4 py-3 bg-slate-800/50 border-2 border-purple-500 rounded-lg text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none"
+                                    className="w-full px-4 py-3 bg-slate-800/50 border-2 border-orange-500 rounded-lg text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none"
                                 />
                             </div>
 
@@ -568,7 +568,7 @@ const Fractionalize = () => {
                                         )
                                     }
                                     placeholder="e.g., FPUNK1234"
-                                    className="w-full px-4 py-3 bg-slate-800/50 border-2 border-purple-500 rounded-lg text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none uppercase"
+                                    className="w-full px-4 py-3 bg-slate-800/50 border-2 border-orange-500 rounded-lg text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none uppercase"
                                 />
                             </div>
 
@@ -583,7 +583,7 @@ const Fractionalize = () => {
                                         setTotalSupply(e.target.value)
                                     }
                                     placeholder="e.g., 1000000"
-                                    className="w-full px-4 py-3 bg-slate-800/50 border-2 border-purple-500 rounded-lg text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none"
+                                    className="w-full px-4 py-3 bg-slate-800/50 border-2 border-orange-500 rounded-lg text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none"
                                 />
                                 <p className="text-xs text-gray-400 mt-1">
                                     How many fractional tokens to create
@@ -592,18 +592,18 @@ const Fractionalize = () => {
 
                             {/* Fee Display */}
                             {feeInfo ? (
-                                <div className="p-4 bg-purple-900/30 border-2 border-purple-500 rounded-lg">
+                                <div className="p-4 bg-orange-900/30 border-2 border-orange-500 rounded-lg">
                                     <div className="flex justify-between items-center">
                                         <span className="text-gray-300 text-sm">
                                             Platform Fee:
                                         </span>
-                                        <span className="text-yellow-400 font-black text-lg">
+                                        <span className="text-orange-400 font-black text-lg">
                                             {feeInfo.feeInEth} ETH
                                         </span>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="p-4 bg-purple-900/30 border-2 border-purple-500 rounded-lg text-center">
+                                <div className="p-4 bg-orange-900/30 border-2 border-orange-500 rounded-lg text-center">
                                     <span className="text-gray-400 text-sm">
                                         Loading fee information...
                                     </span>
@@ -611,7 +611,7 @@ const Fractionalize = () => {
                             )}
 
                             {totalSupply && (
-                                <div className="p-4 bg-purple-900/30 border-2 border-purple-500 rounded-lg">
+                                <div className="p-4 bg-orange-900/30 border-2 border-orange-500 rounded-lg">
                                     <div className="flex justify-between items-center">
                                         <span className="text-gray-300">
                                             You will receive:
@@ -645,7 +645,7 @@ const Fractionalize = () => {
                                         !fractionalSymbol.trim() ||
                                         !totalSupply
                                     }
-                                    className="cursor-pointer flex-1 px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-black text-lg transition-all duration-200 shadow-xl shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-cyan-300"
+                                    className="cursor-pointer flex-1 px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-orange-500 hover:from-cyan-400 hover:to-orange-400 text-black font-black text-lg transition-all duration-200 shadow-xl shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-cyan-300"
                                 >
                                     {isLoading
                                         ? "PROCESSING..."
@@ -658,14 +658,14 @@ const Fractionalize = () => {
 
                 {/* Status Messages */}
                 {error && (
-                    <div className="mt-6 p-4 bg-red-900/50 border-2 border-red-500 rounded-lg">
-                        <p className="text-red-300 font-semibold">{error}</p>
+                    <div className="mt-6 p-4 bg-orange-900/50 border-2 border-orange-500 rounded-lg">
+                        <p className="text-orange-300 font-semibold">{error}</p>
                     </div>
                 )}
 
                 {success && (
-                    <div className="mt-6 p-4 bg-green-900/50 border-2 border-green-500 rounded-lg">
-                        <p className="text-green-300 font-semibold">
+                    <div className="mt-6 p-4 bg-orange-900/50 border-2 border-orange-500 rounded-lg">
+                        <p className="text-orange-300 font-semibold">
                             {success}
                         </p>
                         {txHash && (

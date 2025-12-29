@@ -31,12 +31,10 @@ const Marketplace = () => {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
-    // Create listing form
     const [selectedToken, setSelectedToken] = useState("");
     const [listingAmount, setListingAmount] = useState("");
     const [pricePerToken, setPricePerToken] = useState("");
 
-    // Buy form
     const [buyingListingId, setBuyingListingId] = useState(null);
     const [buyAmount, setBuyAmount] = useState("");
 
@@ -48,50 +46,31 @@ const Marketplace = () => {
     }, [isConnected, contracts.marketplace, provider]);
 
     const loadListings = async () => {
+        if (!provider) return;
         try {
-            if (!provider) {
-                console.log("Provider not ready yet");
-                return;
-            }
-
-            const marketplaceContract = getMarketplaceContract(
-                contracts.marketplace,
-                provider
-            );
-
+            const marketplaceContract = getMarketplaceContract(contracts.marketplace, provider);
             let result;
             try {
                 result = await marketplaceContract.getActiveListings(50);
-            } catch (error) {
-                if (
-                    error.code === "BAD_DATA" ||
-                    error.message.includes("could not decode result data")
-                ) {
-                    console.log("No active listings yet");
+            } catch (err) {
+                if (err.code === "BAD_DATA" || err.message.includes("could not decode result data")) {
                     setListings([]);
                     return;
                 }
-                throw error;
+                throw err;
             }
 
             const [listingIds, sellers, tokens, amounts, prices] = result;
-
             const listingsData = [];
+
             for (let i = 0; i < listingIds.length; i++) {
-                // Get token info
                 let tokenName = "Unknown";
                 let tokenSymbol = "UNKNOWN";
                 try {
-                    const tokenContract = getFractionalTokenContract(
-                        tokens[i],
-                        provider
-                    );
+                    const tokenContract = getFractionalTokenContract(tokens[i], provider);
                     tokenName = await tokenContract.name();
                     tokenSymbol = await tokenContract.symbol();
-                } catch (err) {
-                    console.error("Error loading token info:", err);
-                }
-
+                } catch {}
                 listingsData.push({
                     id: listingIds[i].toString(),
                     seller: sellers[i],
@@ -100,82 +79,54 @@ const Marketplace = () => {
                     tokenSymbol,
                     amount: formatEther(amounts[i].toString()),
                     pricePerToken: prices[i].toString(),
-                    totalPrice: (
-                        BigInt(amounts[i]) * BigInt(prices[i])
-                    ).toString(),
+                    totalPrice: (BigInt(amounts[i]) * BigInt(prices[i])).toString(),
                 });
             }
 
             setListings(listingsData);
         } catch (err) {
-            console.error("Error loading listings:", err);
+            console.error(err);
         }
     };
 
     const loadFractionalizedNFTs = async () => {
+        if (!provider) return;
         try {
-            if (!provider) {
-                console.log("Provider not ready yet");
-                return;
-            }
-
-            const fractionalizationContract = getFractionalizationContract(
-                contracts.fractionalization,
-                provider
-            );
-
+            const fractionalizationContract = getFractionalizationContract(contracts.fractionalization, provider);
             let tokenAddresses = [];
             try {
-                tokenAddresses =
-                    await fractionalizationContract.getAllFractionalizedNFTs();
-            } catch (error) {
-                if (
-                    error.code === "BAD_DATA" ||
-                    error.message.includes("could not decode result data")
-                ) {
-                    console.log("No fractionalized NFTs found yet");
+                tokenAddresses = await fractionalizationContract.getAllFractionalizedNFTs();
+            } catch (err) {
+                if (err.code === "BAD_DATA" || err.message.includes("could not decode result data")) {
                     setFractionalizedNFTs([]);
                     return;
                 }
-                throw error;
+                throw err;
             }
 
             const nftsData = [];
             for (const tokenAddr of tokenAddresses) {
                 try {
-                    const nftInfo =
-                        await fractionalizationContract.getFractionalizedNFT(
-                            tokenAddr
-                        );
-                    const tokenContract = getFractionalTokenContract(
-                        tokenAddr,
-                        provider
-                    );
-
+                    const nftInfo = await fractionalizationContract.getFractionalizedNFT(tokenAddr);
+                    const tokenContract = getFractionalTokenContract(tokenAddr, provider);
                     const name = await tokenContract.name();
                     const symbol = await tokenContract.symbol();
-                    const balance = account
-                        ? formatEther(await tokenContract.balanceOf(account))
-                        : 0;
+                    const balance = account ? formatEther(await tokenContract.balanceOf(account)) : 0;
 
                     nftsData.push({
                         address: tokenAddr,
                         name,
                         symbol,
-                        totalSupply: formatEther(
-                            nftInfo.totalSupply.toString()
-                        ),
+                        totalSupply: formatEther(nftInfo.totalSupply.toString()),
                         isActive: nftInfo.isActive,
                         balance: balance.toString(),
                     });
-                } catch (err) {
-                    console.error("Error loading NFT info:", err);
-                }
+                } catch {}
             }
 
             setFractionalizedNFTs(nftsData);
         } catch (err) {
-            console.error("Error loading fractionalized NFTs:", err);
+            console.error(err);
         }
     };
 
@@ -190,31 +141,16 @@ const Marketplace = () => {
             setError("");
             setSuccess("");
 
-            const tokenContract = getFractionalTokenContract(
-                selectedToken,
-                signer
-            );
-            const marketplaceContract = getMarketplaceContract(
-                contracts.marketplace,
-                signer
-            );
+            const tokenContract = getFractionalTokenContract(selectedToken, signer);
+            const marketplaceContract = getMarketplaceContract(contracts.marketplace, signer);
 
-            // Approve tokens
             setSuccess("Step 1/2: Approving tokens...");
-            const approveTx = await tokenContract.approve(
-                contracts.marketplace,
-                parseEther(listingAmount)
-            );
+            const approveTx = await tokenContract.approve(contracts.marketplace, parseEther(listingAmount));
             await waitForTransaction(approveTx);
 
-            // Create listing
             setSuccess("Step 2/2: Creating listing...");
             const priceInWei = parseEther(pricePerToken);
-            const tx = await marketplaceContract.createListing(
-                selectedToken,
-                parseEther(listingAmount),
-                priceInWei
-            );
+            const tx = await marketplaceContract.createListing(selectedToken, parseEther(listingAmount), priceInWei);
             await waitForTransaction(tx);
 
             setSuccess("Listing created successfully!");
@@ -222,7 +158,6 @@ const Marketplace = () => {
             setListingAmount("");
             setPricePerToken("");
 
-            // Reload listings
             setTimeout(() => {
                 loadListings();
                 loadFractionalizedNFTs();
@@ -245,27 +180,18 @@ const Marketplace = () => {
             setError("");
             setSuccess("");
 
-            const marketplaceContract = getMarketplaceContract(
-                contracts.marketplace,
-                signer
-            );
+            const marketplaceContract = getMarketplaceContract(contracts.marketplace, signer);
 
             const totalPrice = BigInt(amount) * BigInt(pricePerToken);
-            const tradingFee = (totalPrice * BigInt(50)) / BigInt(10000); // 0.5% fee
             const totalCost = totalPrice;
 
-            const tx = await marketplaceContract.purchaseTokens(
-                listingId,
-                amount,
-                { value: totalCost }
-            );
+            const tx = await marketplaceContract.purchaseTokens(listingId, amount, { value: totalCost });
             await waitForTransaction(tx);
 
             setSuccess("Tokens purchased successfully!");
             setBuyingListingId(null);
             setBuyAmount("");
 
-            // Reload listings
             setTimeout(() => {
                 loadListings();
                 loadFractionalizedNFTs();
@@ -276,6 +202,7 @@ const Marketplace = () => {
             setIsLoading(false);
         }
     };
+
     const handleCancelListing = async (listingId) => {
         try {
             setError("");
@@ -288,16 +215,9 @@ const Marketplace = () => {
             }
 
             setSuccess("Cancelling listing...");
-
-            await cancelListing(
-                contracts.marketplace, // address
-                listingId, // listing ID
-                signer
-            );
-
+            await cancelListing(contracts.marketplace, listingId, signer);
             setSuccess("Listing cancelled!");
 
-            // Optional: reload listings after slight delay
             setTimeout(() => loadListings(), 500);
         } catch (err) {
             setError(err.message || "Failed to cancel listing");
@@ -308,30 +228,24 @@ const Marketplace = () => {
 
     if (!isConnected) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-                <div className="bg-gradient-to-br from-purple-900/50 to-indigo-900/50 backdrop-blur-sm border-2 border-cyan-500 rounded-2xl p-12 text-center max-w-md shadow-2xl">
-                    <h2 className="text-3xl font-black text-cyan-400 mb-4">
-                        WALLET NOT CONNECTED
-                    </h2>
-                    <p className="text-gray-300 mb-6">
-                        Please connect your wallet to access the marketplace
-                    </p>
+            <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-pink-950 flex items-center justify-center p-4">
+                <div className="bg-gradient-to-br from-pink-900/50 to-orange-900/50 backdrop-blur-sm border-2 border-orange-400 rounded-2xl p-12 text-center max-w-md shadow-2xl">
+                    <h2 className="text-3xl font-black text-orange-400 mb-4">WALLET NOT CONNECTED</h2>
+                    <p className="text-gray-300 mb-6">Please connect your wallet to access the marketplace</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
+        <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-pink-950 p-8">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-4">
+                    <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-orange-400 mb-4">
                         FRACTIONAL MARKETPLACE
                     </h1>
-                    <p className="text-gray-300 text-lg">
-                        Buy and sell fractional NFT tokens
-                    </p>
+                    <p className="text-gray-300 text-lg">Buy and sell fractional NFT tokens</p>
                 </div>
 
                 {/* Tabs */}
@@ -340,8 +254,8 @@ const Marketplace = () => {
                         onClick={() => setActiveTab("browse")}
                         className={`cursor-pointer px-8 py-3 rounded-xl font-black text-lg transition-all duration-200 ${
                             activeTab === "browse"
-                                ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-black shadow-xl shadow-cyan-500/50 border-2 border-cyan-300"
-                                : "bg-purple-900/50 text-cyan-400 border-2 border-purple-500 hover:bg-purple-800/50"
+                                ? "bg-gradient-to-r from-pink-500 to-orange-500 text-black shadow-xl shadow-pink-500/50 border-2 border-orange-400"
+                                : "bg-purple-900/50 text-orange-400 border-2 border-orange-500 hover:bg-purple-800/50"
                         }`}
                     >
                         BROWSE LISTINGS
@@ -350,8 +264,8 @@ const Marketplace = () => {
                         onClick={() => setActiveTab("create")}
                         className={`cursor-pointer px-8 py-3 rounded-xl font-black text-lg transition-all duration-200 ${
                             activeTab === "create"
-                                ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-black shadow-xl shadow-cyan-500/50 border-2 border-cyan-300"
-                                : "bg-purple-900/50 text-cyan-400 border-2 border-purple-500 hover:bg-purple-800/50"
+                                ? "bg-gradient-to-r from-pink-500 to-orange-500 text-black shadow-xl shadow-pink-500/50 border-2 border-orange-400"
+                                : "bg-purple-900/50 text-orange-400 border-2 border-orange-500 hover:bg-purple-800/50"
                         }`}
                     >
                         CREATE LISTING
@@ -389,16 +303,14 @@ const Marketplace = () => {
 
                 {/* Status Messages */}
                 {error && (
-                    <div className="mt-6 p-4 bg-red-900/50 border-2 border-red-500 rounded-lg">
-                        <p className="text-red-300 font-semibold">{error}</p>
+                    <div className="mt-6 p-4 bg-orange-900/50 border-2 border-orange-500 rounded-lg">
+                        <p className="text-orange-300 font-semibold">{error}</p>
                     </div>
                 )}
 
                 {success && (
-                    <div className="mt-6 p-4 bg-green-900/50 border-2 border-green-500 rounded-lg">
-                        <p className="text-green-300 font-semibold">
-                            {success}
-                        </p>
+                    <div className="mt-6 p-4 bg-pink-900/50 border-2 border-pink-500 rounded-lg">
+                        <p className="text-pink-300 font-semibold">{success}</p>
                     </div>
                 )}
             </div>
