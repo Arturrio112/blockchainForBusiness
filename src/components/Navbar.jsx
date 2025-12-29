@@ -28,16 +28,16 @@ const Navbar = () => {
     }, [isConnected, navigate]);
 
     return (
-        <nav className="bg-gradient-to-r from-red-900 via-indigo-900 to-red-900 border-b-4 border-orange-400 shadow-lg shadow-orange-500/50">
+        <nav className="bg-gradient-to-r from-purple-900 via-indigo-900 to-blue-900 border-b-4 border-cyan-400 shadow-lg shadow-cyan-500/50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-20">
                     {/* Logo */}
                     <div className="flex items-center space-x-3">
                         <div>
-                            <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
+                            <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
                                 FractionX
                             </h1>
-                            <p className="text-xs text-orange-300 font-semibold tracking-wider">
+                            <p className="text-xs text-cyan-300 font-semibold tracking-wider">
                                 DIGITAL ASSET FRACTIONALIZATION
                             </p>
                         </div>
@@ -50,8 +50,8 @@ const Navbar = () => {
                                 to="/fractionalize"
                                 className={`px-5 py-2 rounded-lg font-bold text-sm transition-all duration-200 ${
                                     isActive("/fractionalize")
-                                        ? "bg-orange-500 text-black shadow-lg shadow-orange-500/50"
-                                        : "text-orange-300 hover:bg-orange-500/20 hover:text-orange-100"
+                                        ? "bg-cyan-500 text-black shadow-lg shadow-cyan-500/50"
+                                        : "text-cyan-300 hover:bg-cyan-500/20 hover:text-cyan-100"
                                 }`}
                             >
                                 FRACTIONALIZE
@@ -61,8 +61,8 @@ const Navbar = () => {
                                 to="/marketplace"
                                 className={`px-5 py-2 rounded-lg font-bold text-sm transition-all duration-200 ${
                                     isActive("/marketplace")
-                                        ? "bg-orange-500 text-black shadow-lg shadow-orange-500/50"
-                                        : "text-orange-300 hover:bg-orange-500/20 hover:text-orange-100"
+                                        ? "bg-cyan-500 text-black shadow-lg shadow-cyan-500/50"
+                                        : "text-cyan-300 hover:bg-cyan-500/20 hover:text-cyan-100"
                                 }`}
                             >
                                 MARKETPLACE
@@ -72,8 +72,8 @@ const Navbar = () => {
                                 to="/portfolio"
                                 className={`px-5 py-2 rounded-lg font-bold text-sm transition-all duration-200 ${
                                     isActive("/portfolio")
-                                        ? "bg-orange-500 text-black shadow-lg shadow-orange-500/50"
-                                        : "text-orange-300 hover:bg-orange-500/20 hover:text-orange-100"
+                                        ? "bg-cyan-500 text-black shadow-lg shadow-cyan-500/50"
+                                        : "text-cyan-300 hover:bg-cyan-500/20 hover:text-cyan-100"
                                 }`}
                             >
                                 PORTFOLIO
